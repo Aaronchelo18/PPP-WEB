@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  rol       String   // 'estudiante', 'empresa', 'coordinador'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  estudiante Estudiante?
+  empresa    Empresa?
+}
+
+model Estudiante {
+  id          Int      @id @default(autoincrement())
+  usuarioId   Int      @unique
+  codigo      String   @unique
+  nombre      String
+  apellidos   String
+  carrera     String
+  ciclo       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  usuario    Usuario     @relation(fields: [usuarioId], references: [id])
+  practicas  Practica[]
+}
+
+model Empresa {
+  id          Int      @id @default(autoincrement())
+  usuarioId   Int      @unique
+  ruc         String   @unique
+  nombre      String
+  direccion   String
+  telefono    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  usuario    Usuario     @relation(fields: [usuarioId], references: [id])
+  practicas  Practica[]
+}
+
+model Practica {
+  id                Int       @id @default(autoincrement())
+  estudianteId      Int
+  empresaId         Int
+  fecha_inicio      DateTime
+  fecha_fin         DateTime?
+  horas_requeridas  Int
+  horas_completadas Int       @default(0)
+  estado            String    // 'pendiente', 'en_curso', 'completada', 'cancelada'
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relaciones
+  estudiante  Estudiante    @relation(fields: [estudianteId], references: [id])
+  empresa     Empresa       @relation(fields: [empresaId], references: [id])
+  actividades Actividad[]
+  documentos  Documento[]
+}
+
+model Actividad {
+  id          Int      @id @default(autoincrement())
+  practicaId  Int
+  descripcion String   @db.Text
+  fecha       DateTime
+  horas       Int
+  estado      String   // 'pendiente', 'completada', 'rechazada'
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  practica   Practica    @relation(fields: [practicaId], references: [id])
+}
+
+model Documento {
+  id          Int      @id @default(autoincrement())
+  practicaId  Int
+  nombre      String
+  tipo        String   // 'convenio', 'informe_inicial', 'informe_final', etc.
+  url         String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  practica   Practica    @relation(fields: [practicaId], references: [id])
+} 

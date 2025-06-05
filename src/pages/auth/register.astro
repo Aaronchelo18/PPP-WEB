@@ -1,0 +1,75 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/common/Header.astro';
+
+const userTypes = [
+    {
+        id: 'student',
+        title: 'Estudiante',
+        description: 'Regístrate como estudiante para encontrar y postular a prácticas pre profesionales.',
+        icon: '👨‍🎓'
+    },
+    {
+        id: 'company',
+        title: 'Empresa',
+        description: 'Regístrate como empresa para publicar ofertas y encontrar talento.',
+        icon: '🏢'
+    }
+];
+---
+
+<Layout title="Registro - Sistema PPP">
+    <Header />
+    
+    <div class="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-md">
+            <h2 class="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                Crear una nueva cuenta
+            </h2>
+            <p class="mt-2 text-center text-sm text-gray-600">
+                Selecciona el tipo de cuenta que deseas crear
+            </p>
+        </div>
+
+        <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-[480px]">
+            <div class="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
+                <div class="space-y-6">
+                    {userTypes.map((type) => (
+                        <a
+                            href={`/auth/register/${type.id}`}
+                            class="relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm hover:border-indigo-600 hover:ring-1 hover:ring-indigo-600"
+                        >
+                            <div class="flex-shrink-0 text-2xl">
+                                {type.icon}
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="focus:outline-none">
+                                    <span class="absolute inset-0" aria-hidden="true" />
+                                    <p class="text-sm font-medium text-gray-900">{type.title}</p>
+                                    <p class="text-sm text-gray-500">{type.description}</p>
+                                </div>
+                            </div>
+                        </a>
+                    ))}
+                </div>
+
+                <div class="mt-6">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-200"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm font-medium leading-6">
+                            <span class="bg-white px-6 text-gray-900">¿Ya tienes una cuenta?</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 text-center">
+                        <a href="/auth/login" class="font-semibold text-indigo-600 hover:text-indigo-500">
+                            Inicia sesión aquí
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Layout> 

@@ -1,37 +1,39 @@
 ---
-const navItems = [
-    { text: 'Inicio', href: '/' },
-    { text: 'Prácticas', href: '/internships/list' },
-    { text: 'Mi Panel', href: '/dashboard/student' },
+const navigation = [
+    { name: 'Inicio', href: '/' },
+    { name: 'Prácticas', href: '/practicas' },
+    { name: 'Empresas', href: '/empresas' },
+    { name: 'Seguimiento', href: '/seguimiento' }
 ];
 ---
 
 <header class="bg-white shadow-sm">
-    <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="flex h-16 justify-between">
-            <div class="flex">
-                <div class="flex flex-shrink-0 items-center">
-                    <a href="/" class="text-xl font-bold text-gray-800">PPP System</a>
-                </div>
-                <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                    {navItems.map(item => (
-                        <a
-                            href={item.href}
-                            class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900"
-                        >
-                            {item.text}
+    <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Top">
+        <div class="flex h-16 items-center justify-between">
+            <div class="flex items-center">
+                <a href="/" class="flex items-center space-x-2">
+                    <span class="text-2xl font-bold text-indigo-600">PPP</span>
+                    <span class="text-sm text-gray-500">Sistema de Prácticas</span>
+                </a>
+                <div class="ml-10 hidden space-x-8 lg:block">
+                    {navigation.map((link) => (
+                        <a href={link.href} class="text-sm font-medium text-gray-500 hover:text-gray-900">
+                            {link.name}
                         </a>
                     ))}
                 </div>
             </div>
-            <div class="hidden sm:ml-6 sm:flex sm:items-center">
-                <a
-                    href="/auth/login"
-                    class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-                >
-                    Iniciar Sesión
-                </a>
+            <div class="ml-10 space-x-4">
+                <a href="/auth/login" class="inline-block rounded-md border border-transparent bg-indigo-500 py-2 px-4 text-base font-medium text-white hover:bg-opacity-75">Iniciar Sesión</a>
+                <a href="/auth/register" class="inline-block rounded-md border border-transparent bg-white py-2 px-4 text-base font-medium text-indigo-600 hover:bg-indigo-50">Registrarse</a>
             </div>
+        </div>
+        <div class="flex flex-wrap justify-center space-x-6 py-4 lg:hidden">
+            {navigation.map((link) => (
+                <a href={link.href} class="text-sm font-medium text-gray-500 hover:text-gray-900">
+                    {link.name}
+                </a>
+            ))}
         </div>
     </nav>
 </header> 

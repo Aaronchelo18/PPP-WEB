@@ -1,0 +1,379 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/common/Header.astro';
+
+interface Oferta {
+    id: string;
+    titulo: string;
+    modalidad: string;
+    fecha_publicacion: string;
+    postulantes: number;
+}
+
+interface Empresa {
+    id: string;
+    nombre: string;
+    logo: string;
+    sector: string;
+    ubicacion: string;
+    descripcion: string;
+    ofertas_activas: number;
+    practicantes_actuales: number;
+    sitio_web: string;
+    tamano: string;
+    beneficios: string[];
+    tecnologias: string[];
+    cultura: string;
+    proceso_seleccion: string[];
+    ofertas: Oferta[];
+}
+
+type EmpresasDB = {
+    [key in '1' | '2' | '3']: Empresa;
+};
+
+// Base de datos simulada de empresas
+const empresasDB: EmpresasDB = {
+    '1': {
+        id: '1',
+        nombre: 'Tech Solutions',
+        logo: '/img/empresas/tech-solutions.png',
+        sector: 'Tecnología',
+        ubicacion: 'San Isidro, Lima',
+        descripcion: 'Empresa líder en desarrollo de software y soluciones tecnológicas con más de 10 años de experiencia en el mercado. Nos especializamos en desarrollo web, aplicaciones móviles y soluciones cloud.',
+        ofertas_activas: 3,
+        practicantes_actuales: 5,
+        sitio_web: 'www.techsolutions.com',
+        tamano: '50-100 empleados',
+        beneficios: [
+            'Horario flexible',
+            'Capacitaciones constantes',
+            'Ambiente de trabajo moderno',
+            'Posibilidad de contratación',
+            'Mentoría personalizada'
+        ],
+        tecnologias: [
+            'React',
+            'Node.js',
+            'Python',
+            'AWS',
+            'Docker'
+        ],
+        cultura: 'Fomentamos la innovación y el aprendizaje continuo en un ambiente colaborativo y dinámico. Valoramos la iniciativa y el pensamiento creativo.',
+        proceso_seleccion: [
+            'Revisión de CV',
+            'Entrevista técnica',
+            'Entrevista con RRHH',
+            'Evaluación práctica',
+            'Entrevista final'
+        ],
+        ofertas: [
+            {
+                id: '1',
+                titulo: 'Practicante de Desarrollo Web',
+                modalidad: 'Híbrido',
+                fecha_publicacion: '2024-03-25',
+                postulantes: 5
+            },
+            {
+                id: '2',
+                titulo: 'Practicante de QA',
+                modalidad: 'Presencial',
+                fecha_publicacion: '2024-03-24',
+                postulantes: 3
+            },
+            {
+                id: '3',
+                titulo: 'Practicante de UX/UI',
+                modalidad: 'Remoto',
+                fecha_publicacion: '2024-03-23',
+                postulantes: 4
+            }
+        ]
+    },
+    '2': {
+        id: '2',
+        nombre: 'Global Corp',
+        logo: '/img/empresas/global-corp.png',
+        sector: 'Consultoría',
+        ubicacion: 'Miraflores, Lima',
+        descripcion: 'Consultora internacional especializada en estrategia empresarial y transformación digital. Ayudamos a empresas a alcanzar su máximo potencial a través de soluciones innovadoras.',
+        ofertas_activas: 2,
+        practicantes_actuales: 3,
+        sitio_web: 'www.globalcorp.com',
+        tamano: '100-500 empleados',
+        beneficios: [
+            'Plan de carrera',
+            'Seguro médico privado',
+            'Bonos por desempeño',
+            'Capacitaciones internacionales',
+            'Eventos corporativos'
+        ],
+        tecnologias: [
+            'SAP',
+            'Salesforce',
+            'Power BI',
+            'Tableau',
+            'Microsoft 365'
+        ],
+        cultura: 'Promovemos un ambiente de trabajo profesional y orientado a resultados, con énfasis en el desarrollo personal y profesional de nuestros colaboradores.',
+        proceso_seleccion: [
+            'Evaluación de perfil',
+            'Test psicotécnico',
+            'Entrevista con supervisor',
+            'Assessment center',
+            'Entrevista final'
+        ],
+        ofertas: [
+            {
+                id: '4',
+                titulo: 'Practicante de Consultoría',
+                modalidad: 'Presencial',
+                fecha_publicacion: '2024-03-25',
+                postulantes: 8
+            },
+            {
+                id: '5',
+                titulo: 'Practicante de Business Intelligence',
+                modalidad: 'Híbrido',
+                fecha_publicacion: '2024-03-24',
+                postulantes: 6
+            }
+        ]
+    },
+    '3': {
+        id: '3',
+        nombre: 'Marketing Pro',
+        logo: '/img/empresas/marketing-pro.png',
+        sector: 'Marketing',
+        ubicacion: 'Surco, Lima',
+        descripcion: 'Agencia de marketing digital especializada en estrategias omnicanal. Creamos experiencias digitales memorables y campañas que generan resultados medibles.',
+        ofertas_activas: 1,
+        practicantes_actuales: 2,
+        sitio_web: 'www.marketingpro.com',
+        tamano: '10-50 empleados',
+        beneficios: [
+            'Ambiente creativo',
+            'Trabajo remoto',
+            'Horario flexible',
+            'Desarrollo de portfolio',
+            'Networking'
+        ],
+        tecnologias: [
+            'Adobe Creative Suite',
+            'Google Analytics',
+            'Meta Ads',
+            'Mailchimp',
+            'HubSpot'
+        ],
+        cultura: 'Somos un equipo joven y dinámico que valora la creatividad y la innovación. Trabajamos en un ambiente colaborativo donde todas las ideas son bienvenidas.',
+        proceso_seleccion: [
+            'Revisión de portfolio',
+            'Entrevista inicial',
+            'Prueba práctica',
+            'Entrevista con el equipo',
+            'Propuesta final'
+        ],
+        ofertas: [
+            {
+                id: '6',
+                titulo: 'Practicante de Marketing Digital',
+                modalidad: 'Remoto',
+                fecha_publicacion: '2024-03-25',
+                postulantes: 4
+            }
+        ]
+    }
+};
+
+export async function getStaticPaths() {
+    return [
+        { params: { id: '1' } },
+        { params: { id: '2' } },
+        { params: { id: '3' } }
+    ];
+}
+
+const { id } = Astro.params;
+const empresa = empresasDB[id as keyof EmpresasDB];
+const ofertas = empresa.ofertas;
+---
+
+<Layout title={`${empresa.nombre} - Sistema PPP`}>
+    <Header />
+    
+    <div class="py-10">
+        <main>
+            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <!-- Encabezado de la Empresa -->
+                <div class="bg-white shadow sm:rounded-lg">
+                    <div class="px-4 py-5 sm:p-6">
+                        <div class="md:flex md:items-center md:justify-between">
+                            <div class="flex items-center">
+                                <div class="h-20 w-20 bg-gray-100 rounded-full flex items-center justify-center">
+                                    <span class="text-3xl font-bold text-gray-600">
+                                        {empresa.nombre.charAt(0)}
+                                    </span>
+                                </div>
+                                <div class="ml-6">
+                                    <h1 class="text-2xl font-bold text-gray-900">{empresa.nombre}</h1>
+                                    <div class="mt-1 flex items-center">
+                                        <span class="text-sm text-gray-500">{empresa.sector}</span>
+                                        <span class="mx-2 text-gray-500">•</span>
+                                        <span class="text-sm text-gray-500">{empresa.ubicacion}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex md:ml-4 md:mt-0">
+                                <a
+                                    href={`https://${empresa.sitio_web}`}
+                                    target="_blank"
+                                    class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                                >
+                                    Visitar sitio web
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-3">
+                    <!-- Información Principal -->
+                    <div class="lg:col-span-2 space-y-8">
+                        <!-- Descripción -->
+                        <div class="bg-white shadow sm:rounded-lg">
+                            <div class="px-4 py-5 sm:p-6">
+                                <h2 class="text-lg font-medium text-gray-900">Sobre la empresa</h2>
+                                <p class="mt-4 text-gray-500">{empresa.descripcion}</p>
+                                <div class="mt-6">
+                                    <h3 class="text-sm font-medium text-gray-900">Cultura empresarial</h3>
+                                    <p class="mt-2 text-sm text-gray-500">{empresa.cultura}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tecnologías -->
+                        <div class="bg-white shadow sm:rounded-lg">
+                            <div class="px-4 py-5 sm:p-6">
+                                <h2 class="text-lg font-medium text-gray-900">Tecnologías</h2>
+                                <div class="mt-4 flex flex-wrap gap-2">
+                                    {empresa.tecnologias.map((tech: string) => (
+                                        <span class="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-sm font-medium text-indigo-700">
+                                            {tech}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Proceso de Selección -->
+                        <div class="bg-white shadow sm:rounded-lg">
+                            <div class="px-4 py-5 sm:p-6">
+                                <h2 class="text-lg font-medium text-gray-900">Proceso de selección</h2>
+                                <div class="mt-4">
+                                    <div class="flow-root">
+                                        <ul role="list" class="-mb-8">
+                                            {empresa.proceso_seleccion.map((paso: string, index: number) => (
+                                                <li>
+                                                    <div class="relative pb-8">
+                                                        {index !== empresa.proceso_seleccion.length - 1 && (
+                                                            <span class="absolute left-4 top-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                                        )}
+                                                        <div class="relative flex space-x-3">
+                                                            <div>
+                                                                <span class="h-8 w-8 rounded-full bg-indigo-50 flex items-center justify-center ring-8 ring-white">
+                                                                    <span class="text-sm font-medium text-indigo-700">{index + 1}</span>
+                                                                </span>
+                                                            </div>
+                                                            <div class="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
+                                                                <div>
+                                                                    <p class="text-sm text-gray-500">{paso}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div class="space-y-8">
+                        <!-- Estadísticas -->
+                        <div class="bg-white shadow sm:rounded-lg">
+                            <div class="px-4 py-5 sm:p-6">
+                                <h2 class="text-lg font-medium text-gray-900">Estadísticas</h2>
+                                <dl class="mt-4 grid grid-cols-1 gap-4">
+                                    <div class="bg-gray-50 px-4 py-5 sm:p-6 rounded-lg">
+                                        <dt class="text-sm font-medium text-gray-500">Ofertas activas</dt>
+                                        <dd class="mt-1 text-3xl font-semibold text-indigo-600">{empresa.ofertas_activas}</dd>
+                                    </div>
+                                    <div class="bg-gray-50 px-4 py-5 sm:p-6 rounded-lg">
+                                        <dt class="text-sm font-medium text-gray-500">Practicantes actuales</dt>
+                                        <dd class="mt-1 text-3xl font-semibold text-indigo-600">{empresa.practicantes_actuales}</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                        </div>
+
+                        <!-- Beneficios -->
+                        <div class="bg-white shadow sm:rounded-lg">
+                            <div class="px-4 py-5 sm:p-6">
+                                <h2 class="text-lg font-medium text-gray-900">Beneficios</h2>
+                                <ul role="list" class="mt-4 space-y-2">
+                                    {empresa.beneficios.map((beneficio: string) => (
+                                        <li class="flex items-center">
+                                            <svg class="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                            </svg>
+                                            <span class="ml-2 text-sm text-gray-500">{beneficio}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Ofertas Activas -->
+                        <div class="bg-white shadow sm:rounded-lg">
+                            <div class="px-4 py-5 sm:p-6">
+                                <h2 class="text-lg font-medium text-gray-900">Ofertas activas</h2>
+                                <div class="mt-4 space-y-4">
+                                    {ofertas.map((oferta: Oferta) => (
+                                        <div class="border-b border-gray-200 pb-4 last:border-b-0 last:pb-0">
+                                            <h3 class="text-sm font-medium text-gray-900">
+                                                <a href={`/practicas/${oferta.id}`} class="hover:text-indigo-600">
+                                                    {oferta.titulo}
+                                                </a>
+                                            </h3>
+                                            <div class="mt-1 flex items-center text-sm text-gray-500">
+                                                <span class="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700">
+                                                    {oferta.modalidad}
+                                                </span>
+                                                <span class="ml-2">{oferta.postulantes} postulantes</span>
+                                            </div>
+                                            <div class="mt-1 text-sm text-gray-500">
+                                                Publicado el {new Date(oferta.fecha_publicacion).toLocaleDateString('es-ES')}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div class="mt-6">
+                                    <a
+                                        href={`/practicas?empresa=${empresa.id}`}
+                                        class="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                                    >
+                                        Ver todas las ofertas
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</Layout> 

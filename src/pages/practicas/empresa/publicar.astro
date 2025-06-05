@@ -1,0 +1,254 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/common/Header.astro';
+
+const carreras = [
+    'Ingeniería de Sistemas',
+    'Ingeniería Industrial',
+    'Ingeniería Civil',
+    'Administración',
+    'Contabilidad',
+    'Marketing',
+    'Diseño Gráfico',
+    'Arquitectura'
+];
+
+const modalidades = ['Presencial', 'Remoto', 'Híbrido'];
+---
+
+<Layout title="Publicar Oferta de Práctica - Sistema PPP">
+    <Header />
+    
+    <div class="py-10">
+        <main>
+            <div class="mx-auto max-w-3xl sm:px-6 lg:px-8">
+                <div class="space-y-8">
+                    <!-- Encabezado -->
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">Publicar oferta de práctica pre profesional</h1>
+                        <p class="mt-2 text-sm text-gray-600">
+                            Complete el formulario con los detalles de la práctica que desea ofrecer.
+                        </p>
+                    </div>
+
+                    <!-- Formulario de Publicación -->
+                    <form action="/api/practicas" method="POST" class="space-y-8">
+                        <!-- Información Básica -->
+                        <div class="bg-white shadow sm:rounded-lg">
+                            <div class="px-4 py-5 sm:p-6">
+                                <h2 class="text-base font-semibold leading-7 text-gray-900">Información Básica</h2>
+                                <p class="mt-1 text-sm leading-6 text-gray-600">
+                                    Proporcione los detalles principales de la oferta.
+                                </p>
+
+                                <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
+                                    <div class="col-span-full">
+                                        <label for="titulo" class="block text-sm font-medium leading-6 text-gray-900">Título de la práctica</label>
+                                        <div class="mt-2">
+                                            <input
+                                                type="text"
+                                                name="titulo"
+                                                id="titulo"
+                                                required
+                                                placeholder="ej. Practicante de Marketing Digital"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-span-full">
+                                        <label for="descripcion" class="block text-sm font-medium leading-6 text-gray-900">Descripción de la práctica</label>
+                                        <div class="mt-2">
+                                            <textarea
+                                                id="descripcion"
+                                                name="descripcion"
+                                                rows="4"
+                                                required
+                                                placeholder="Describe las principales responsabilidades y objetivos de la práctica..."
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            ></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="carrera" class="block text-sm font-medium leading-6 text-gray-900">Carrera requerida</label>
+                                        <div class="mt-2">
+                                            <select
+                                                id="carrera"
+                                                name="carrera"
+                                                required
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            >
+                                                <option value="">Seleccionar carrera...</option>
+                                                {carreras.map(carrera => (
+                                                    <option value={carrera}>{carrera}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="modalidad" class="block text-sm font-medium leading-6 text-gray-900">Modalidad</label>
+                                        <div class="mt-2">
+                                            <select
+                                                id="modalidad"
+                                                name="modalidad"
+                                                required
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            >
+                                                <option value="">Seleccionar modalidad...</option>
+                                                {modalidades.map(modalidad => (
+                                                    <option value={modalidad}>{modalidad}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Requisitos y Beneficios -->
+                        <div class="bg-white shadow sm:rounded-lg">
+                            <div class="px-4 py-5 sm:p-6">
+                                <h2 class="text-base font-semibold leading-7 text-gray-900">Requisitos y Beneficios</h2>
+                                <p class="mt-1 text-sm leading-6 text-gray-600">
+                                    Especifique los requisitos del practicante y los beneficios ofrecidos.
+                                </p>
+
+                                <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
+                                    <div class="col-span-full">
+                                        <label for="requisitos" class="block text-sm font-medium leading-6 text-gray-900">Requisitos</label>
+                                        <div class="mt-2">
+                                            <textarea
+                                                id="requisitos"
+                                                name="requisitos"
+                                                rows="4"
+                                                required
+                                                placeholder="Lista los requisitos principales para el puesto..."
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            ></textarea>
+                                        </div>
+                                        <p class="mt-2 text-sm text-gray-500">Separa cada requisito con una nueva línea.</p>
+                                    </div>
+
+                                    <div class="col-span-full">
+                                        <label for="beneficios" class="block text-sm font-medium leading-6 text-gray-900">Beneficios</label>
+                                        <div class="mt-2">
+                                            <textarea
+                                                id="beneficios"
+                                                name="beneficios"
+                                                rows="4"
+                                                required
+                                                placeholder="Lista los beneficios que ofrece la práctica..."
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            ></textarea>
+                                        </div>
+                                        <p class="mt-2 text-sm text-gray-500">Separa cada beneficio con una nueva línea.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Detalles Adicionales -->
+                        <div class="bg-white shadow sm:rounded-lg">
+                            <div class="px-4 py-5 sm:p-6">
+                                <h2 class="text-base font-semibold leading-7 text-gray-900">Detalles Adicionales</h2>
+                                <p class="mt-1 text-sm leading-6 text-gray-600">
+                                    Complete la información adicional sobre la práctica.
+                                </p>
+
+                                <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
+                                    <div class="sm:col-span-3">
+                                        <label for="duracion" class="block text-sm font-medium leading-6 text-gray-900">Duración</label>
+                                        <div class="mt-2">
+                                            <input
+                                                type="text"
+                                                name="duracion"
+                                                id="duracion"
+                                                required
+                                                placeholder="ej. 6 meses"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="horario" class="block text-sm font-medium leading-6 text-gray-900">Horario</label>
+                                        <div class="mt-2">
+                                            <input
+                                                type="text"
+                                                name="horario"
+                                                id="horario"
+                                                required
+                                                placeholder="ej. Lunes a Viernes, 9am - 3pm"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="subvencion" class="block text-sm font-medium leading-6 text-gray-900">Subvención económica</label>
+                                        <div class="mt-2">
+                                            <input
+                                                type="text"
+                                                name="subvencion"
+                                                id="subvencion"
+                                                required
+                                                placeholder="ej. S/. 1,200.00 mensuales"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="vacantes" class="block text-sm font-medium leading-6 text-gray-900">Número de vacantes</label>
+                                        <div class="mt-2">
+                                            <input
+                                                type="number"
+                                                name="vacantes"
+                                                id="vacantes"
+                                                min="1"
+                                                required
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-span-full">
+                                        <label for="ubicacion" class="block text-sm font-medium leading-6 text-gray-900">Ubicación</label>
+                                        <div class="mt-2">
+                                            <input
+                                                type="text"
+                                                name="ubicacion"
+                                                id="ubicacion"
+                                                required
+                                                placeholder="ej. San Isidro, Lima"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones de Acción -->
+                        <div class="flex items-center justify-end space-x-4">
+                            <a
+                                href="/practicas/empresa"
+                                class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                            >
+                                Cancelar
+                            </a>
+                            <button
+                                type="submit"
+                                class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                            >
+                                Publicar oferta
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</Layout> 

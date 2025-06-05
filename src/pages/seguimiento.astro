@@ -1,0 +1,124 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/common/Header.astro';
+import { type EstadoPractica, estadosPractica } from '../types/estados';
+
+const practicas = [
+    {
+        estudiante: 'Ana García',
+        codigo: '2021001',
+        empresa: 'Tech Solutions',
+        estado: 'En Progreso (Docs Iniciales OK)' as EstadoPractica,
+        fecha_inicio: '15/03/2024'
+    },
+    {
+        estudiante: 'Carlos Pérez',
+        codigo: '2020050',
+        empresa: 'Innovatech',
+        estado: 'Pendiente Docs Empresa' as EstadoPractica,
+        fecha_inicio: '01/04/2024'
+    },
+    {
+        estudiante: 'Aarón López',
+        codigo: '2021003',
+        empresa: 'Global Corp',
+        estado: 'En Progreso (Docs Iniciales OK)' as EstadoPractica,
+        fecha_inicio: '25/03/2024'
+    },
+    {
+        estudiante: 'Carlos Fernández',
+        codigo: '2021004',
+        empresa: 'Tech Innovators',
+        estado: 'En Progreso (Docs Iniciales OK)' as EstadoPractica,
+        fecha_inicio: '30/03/2024'
+    }
+];
+---
+
+<Layout title="Seguimiento de Prácticas - Sistema PPP">
+    <Header />
+    
+    <div class="py-10">
+        <header>
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold leading-tight tracking-tight text-gray-900">Seguimiento de prácticas pre profesionales</h1>
+            </div>
+        </header>
+        <main>
+            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <!-- Filtros y Búsqueda -->
+                <div class="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                    <div class="flex space-x-2">
+                        <select class="rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <option>Todos los estados</option>
+                            <option>En Progreso</option>
+                            <option>Pendiente</option>
+                            <option>Completado</option>
+                        </select>
+                        <select class="rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <option>Todas las empresas</option>
+                            {Array.from(new Set(practicas.map(p => p.empresa))).map(empresa => (
+                                <option>{empresa}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div class="mt-4 sm:mt-0">
+                        <div class="relative rounded-md shadow-sm">
+                            <input
+                                type="text"
+                                name="search"
+                                id="search"
+                                class="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                placeholder="Buscar por nombre o código"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla de Prácticas -->
+                <div class="mt-8 flow-root">
+                    <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                            <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+                                <table class="min-w-full divide-y divide-gray-300">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Nombre del estudiante</th>
+                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Código universitario</th>
+                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Empresa</th>
+                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Estado</th>
+                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Fecha de inicio</th>
+                                            <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                                <span class="sr-only">Acciones</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200 bg-white">
+                                        {practicas.map((practica) => (
+                                            <tr>
+                                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{practica.estudiante}</td>
+                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{practica.codigo}</td>
+                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{practica.empresa}</td>
+                                                <td class="whitespace-nowrap px-3 py-4 text-sm">
+                                                    <span class={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${estadosPractica[practica.estado]}`}>
+                                                        {practica.estado}
+                                                    </span>
+                                                </td>
+                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{practica.fecha_inicio}</td>
+                                                <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                                    <a href={`/practicas/${practica.codigo}`} class="text-indigo-600 hover:text-indigo-900">
+                                                        Ver detalles
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</Layout> 

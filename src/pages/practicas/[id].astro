@@ -1,0 +1,219 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/common/Header.astro';
+
+// Función requerida para rutas dinámicas
+export async function getStaticPaths() {
+    // Por ahora, generamos rutas para las ofertas de ejemplo
+    // En producción, esto vendría de una base de datos
+    return [
+        { params: { id: '1' } },
+        { params: { id: '2' } }
+    ];
+}
+
+const { id } = Astro.params;
+
+// Simulación de datos de la oferta
+const oferta = {
+    id: '1',
+    titulo: 'Practicante de Desarrollo Web',
+    empresa: 'Tech Solutions',
+    ubicacion: 'Lima',
+    modalidad: 'Híbrido',
+    duracion: '6 meses',
+    carrera: 'Ingeniería de Sistemas',
+    descripcion: 'Buscamos un practicante para unirse a nuestro equipo de desarrollo web, trabajando con tecnologías modernas como React, Node.js y AWS.',
+    requisitos: [
+        'Estudiante de últimos ciclos',
+        'Conocimientos en JavaScript/TypeScript',
+        'Experiencia básica con React',
+        'Inglés intermedio'
+    ],
+    beneficios: [
+        'Horario flexible',
+        'Capacitaciones',
+        'Posibilidad de contratación',
+        'Ambiente dinámico'
+    ],
+    fecha_publicacion: '2024-03-25',
+    empresa_info: {
+        nombre: 'Tech Solutions',
+        descripcion: 'Empresa líder en desarrollo de software y soluciones tecnológicas, con más de 10 años de experiencia en el mercado.',
+        sector: 'Tecnología',
+        sitio_web: 'www.techsolutions.com',
+        ubicacion: 'San Isidro, Lima',
+        tamano: '50-100 empleados'
+    },
+    detalles_adicionales: {
+        horario: 'Lunes a Viernes, 6 horas diarias',
+        inicio: 'Inmediato',
+        subvencion: 'S/. 1,200.00 mensuales',
+        vacantes: 2
+    }
+};
+---
+
+<Layout title={`${oferta.titulo} - ${oferta.empresa} | Sistema PPP`}>
+    <Header />
+    
+    <div class="py-10">
+        <main>
+            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <div class="space-y-8">
+                    <!-- Encabezado de la Oferta -->
+                    <div class="bg-white shadow sm:rounded-lg">
+                        <div class="px-4 py-5 sm:p-6">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <h1 class="text-2xl font-bold text-gray-900">{oferta.titulo}</h1>
+                                    <p class="mt-1 text-lg text-gray-500">{oferta.empresa}</p>
+                                </div>
+                                <span class="inline-flex items-center rounded-full bg-indigo-100 px-3 py-0.5 text-sm font-medium text-indigo-800">
+                                    {oferta.modalidad}
+                                </span>
+                            </div>
+                            <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <svg class="h-5 w-5 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                    {oferta.ubicacion}
+                                </div>
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <svg class="h-5 w-5 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    {oferta.duracion}
+                                </div>
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <svg class="h-5 w-5 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                    </svg>
+                                    {oferta.carrera}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+                        <!-- Información Principal -->
+                        <div class="lg:col-span-2 space-y-8">
+                            <!-- Descripción -->
+                            <div class="bg-white shadow sm:rounded-lg">
+                                <div class="px-4 py-5 sm:p-6">
+                                    <h2 class="text-lg font-medium text-gray-900">Descripción de la práctica</h2>
+                                    <p class="mt-4 text-gray-500">{oferta.descripcion}</p>
+                                </div>
+                            </div>
+
+                            <!-- Requisitos -->
+                            <div class="bg-white shadow sm:rounded-lg">
+                                <div class="px-4 py-5 sm:p-6">
+                                    <h2 class="text-lg font-medium text-gray-900">Requisitos</h2>
+                                    <ul class="mt-4 list-disc list-inside space-y-2 text-gray-500">
+                                        {oferta.requisitos.map(requisito => (
+                                            <li>{requisito}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Beneficios -->
+                            <div class="bg-white shadow sm:rounded-lg">
+                                <div class="px-4 py-5 sm:p-6">
+                                    <h2 class="text-lg font-medium text-gray-900">Beneficios</h2>
+                                    <ul class="mt-4 list-disc list-inside space-y-2 text-gray-500">
+                                        {oferta.beneficios.map(beneficio => (
+                                            <li>{beneficio}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar -->
+                        <div class="space-y-8">
+                            <!-- Detalles Adicionales -->
+                            <div class="bg-white shadow sm:rounded-lg">
+                                <div class="px-4 py-5 sm:p-6">
+                                    <h2 class="text-lg font-medium text-gray-900">Detalles de la práctica</h2>
+                                    <dl class="mt-4 space-y-4">
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Horario</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{oferta.detalles_adicionales.horario}</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Inicio</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{oferta.detalles_adicionales.inicio}</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Subvención</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{oferta.detalles_adicionales.subvencion}</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Vacantes</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{oferta.detalles_adicionales.vacantes}</dd>
+                                        </div>
+                                    </dl>
+                                </div>
+                            </div>
+
+                            <!-- Información de la Empresa -->
+                            <div class="bg-white shadow sm:rounded-lg">
+                                <div class="px-4 py-5 sm:p-6">
+                                    <h2 class="text-lg font-medium text-gray-900">Sobre la empresa</h2>
+                                    <dl class="mt-4 space-y-4">
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Descripción</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{oferta.empresa_info.descripcion}</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Sector</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{oferta.empresa_info.sector}</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Sitio web</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">
+                                                <a href={`https://${oferta.empresa_info.sitio_web}`} target="_blank" class="text-indigo-600 hover:text-indigo-500">
+                                                    {oferta.empresa_info.sitio_web}
+                                                </a>
+                                            </dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Ubicación</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{oferta.empresa_info.ubicacion}</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Tamaño de la empresa</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{oferta.empresa_info.tamano}</dd>
+                                        </div>
+                                    </dl>
+                                </div>
+                            </div>
+
+                            <!-- Botón de Postulación -->
+                            <div class="bg-white shadow sm:rounded-lg">
+                                <div class="px-4 py-5 sm:p-6">
+                                    <h2 class="text-lg font-medium text-gray-900">¿Te interesa esta práctica?</h2>
+                                    <div class="mt-4">
+                                        <a
+                                            href={`/practicas/postular/${id}`}
+                                            class="block w-full rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        >
+                                            Postular ahora
+                                        </a>
+                                    </div>
+                                    <p class="mt-2 text-sm text-gray-500">
+                                        Publicado el {new Date(oferta.fecha_publicacion).toLocaleDateString('es-ES')}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</Layout> 

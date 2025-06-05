@@ -1,0 +1,161 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import Header from '../../../../components/common/Header.astro';
+
+export async function getStaticPaths() {
+    return [
+        { params: { id: '1' } },
+        { params: { id: '2' } }
+    ];
+}
+
+const { id } = Astro.params;
+
+// Simulación de datos de la oferta y postulantes
+const oferta = {
+    id: '1',
+    titulo: 'Practicante de Desarrollo Web',
+    empresa: 'Tech Solutions',
+    estado: 'Activa'
+};
+
+const postulantes = [
+    {
+        id: '1',
+        nombres: 'Ana María',
+        apellidos: 'García López',
+        universidad: 'Universidad Nacional Mayor de San Marcos',
+        carrera: 'Ingeniería de Sistemas',
+        ciclo: '9no',
+        promedio: '16.5',
+        estado: 'Pendiente',
+        fecha_postulacion: '2024-03-26'
+    },
+    {
+        id: '2',
+        nombres: 'Juan Carlos',
+        apellidos: 'Pérez Rodríguez',
+        universidad: 'Universidad Nacional de Ingeniería',
+        carrera: 'Ingeniería de Sistemas',
+        ciclo: '8vo',
+        promedio: '17.2',
+        estado: 'En revisión',
+        fecha_postulacion: '2024-03-25'
+    }
+];
+
+const estadosClase = {
+    'Pendiente': 'bg-yellow-100 text-yellow-800',
+    'En revisión': 'bg-blue-100 text-blue-800',
+    'Aceptado': 'bg-green-100 text-green-800',
+    'Rechazado': 'bg-red-100 text-red-800'
+} as const;
+---
+
+<Layout title={`Postulantes - ${oferta.titulo} - Sistema PPP`}>
+    <Header />
+    
+    <div class="py-10">
+        <main>
+            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <!-- Encabezado -->
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Postulantes</h1>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Lista de postulantes para la oferta: {oferta.titulo}
+                    </p>
+                </div>
+
+                <!-- Filtros -->
+                <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                        <label for="estado" class="block text-sm font-medium text-gray-700">Estado</label>
+                        <select id="estado" class="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
+                            <option>Todos los estados</option>
+                            <option>Pendiente</option>
+                            <option>En revisión</option>
+                            <option>Aceptado</option>
+                            <option>Rechazado</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="busqueda" class="block text-sm font-medium text-gray-700">Buscar</label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <input
+                                type="text"
+                                name="busqueda"
+                                id="busqueda"
+                                class="block w-full rounded-md border-gray-300 pr-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                placeholder="Buscar postulantes..."
+                            />
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de Postulantes -->
+                <div class="mt-8 flow-root">
+                    <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                            <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+                                <table class="min-w-full divide-y divide-gray-300">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Postulante</th>
+                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Universidad</th>
+                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Carrera</th>
+                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Ciclo</th>
+                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Promedio</th>
+                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Estado</th>
+                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Fecha</th>
+                                            <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                                <span class="sr-only">Acciones</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200 bg-white">
+                                        {postulantes.map((postulante) => (
+                                            <tr>
+                                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                    <a href={`/practicas/empresa/postulantes/${id}/${postulante.id}`} class="text-indigo-600 hover:text-indigo-900">
+                                                        {postulante.nombres} {postulante.apellidos}
+                                                    </a>
+                                                </td>
+                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{postulante.universidad}</td>
+                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{postulante.carrera}</td>
+                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{postulante.ciclo}</td>
+                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{postulante.promedio}</td>
+                                                <td class="whitespace-nowrap px-3 py-4 text-sm">
+                                                    <span class={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${estadosClase[postulante.estado as keyof typeof estadosClase]}`}>
+                                                        {postulante.estado}
+                                                    </span>
+                                                </td>
+                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                    {new Date(postulante.fecha_postulacion).toLocaleDateString('es-ES')}
+                                                </td>
+                                                <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                                    <div class="flex justify-end space-x-3">
+                                                        <button class="text-green-600 hover:text-green-900">
+                                                            Aceptar
+                                                        </button>
+                                                        <button class="text-red-600 hover:text-red-900">
+                                                            Rechazar
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</Layout> 

@@ -1,0 +1,213 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { adminService } from '../../../services/adminService';
+
+export async function getStaticPaths() {
+    const practicas = await adminService.getPracticas();
+    return practicas.map(practica => ({
+        params: { id: practica.id.toString() }
+    }));
+}
+
+const { id } = Astro.params;
+const practica = await adminService.getPracticaPorId(parseInt(id));
+
+if (!practica) {
+    return Astro.redirect('/admin/practicas');
+}
+
+const estudiante = await adminService.getEstudiantePorId(practica.estudiante_id);
+const empresa = await adminService.getEmpresaPorId(practica.empresa_id);
+
+if (!estudiante || !empresa) {
+    return Astro.redirect('/admin/practicas');
+}
+---
+
+<AdminLayout title={`Práctica de ${estudiante.nombre} ${estudiante.apellidos} - Sistema PPP`}>
+    <div class="space-y-6">
+        <!-- Encabezado -->
+        <div class="md:flex md:items-center md:justify-between">
+            <div class="min-w-0 flex-1">
+                <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
+                    Práctica Pre Profesional
+                </h2>
+                <p class="mt-1 text-sm text-gray-500">
+                    Detalle de la práctica y seguimiento
+                </p>
+            </div>
+            <div class="mt-4 flex md:ml-4 md:mt-0">
+                <button type="button" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                    Editar
+                </button>
+                <button type="button" class="ml-3 inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700">
+                    Cancelar Práctica
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <!-- Información de la Práctica -->
+            <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+                <div class="px-4 py-5 sm:p-6">
+                    <h3 class="text-base font-semibold leading-7 text-gray-900">Información de la Práctica</h3>
+                    <dl class="mt-6 space-y-6 divide-y divide-gray-100 text-sm leading-6">
+                        <div class="pt-6 sm:flex">
+                            <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Estado</dt>
+                            <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                                <div>
+                                    <span class={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                                        practica.estado === 'en_curso' ? 'bg-green-100 text-green-800' :
+                                        practica.estado === 'completada' ? 'bg-blue-100 text-blue-800' :
+                                        practica.estado === 'pendiente' ? 'bg-yellow-100 text-yellow-800' :
+                                        'bg-red-100 text-red-800'
+                                    }`}>
+                                        {practica.estado.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                                    </span>
+                                </div>
+                            </dd>
+                        </div>
+                        <div class="pt-6 sm:flex">
+                            <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Área</dt>
+                            <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                                <div class="text-gray-900">{practica.area}</div>
+                            </dd>
+                        </div>
+                        <div class="pt-6 sm:flex">
+                            <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Supervisor</dt>
+                            <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                                <div class="text-gray-900">{practica.supervisor}</div>
+                            </dd>
+                        </div>
+                        <div class="pt-6 sm:flex">
+                            <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Fecha de Inicio</dt>
+                            <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                                <div class="text-gray-900">{new Date(practica.fecha_inicio).toLocaleDateString('es-ES')}</div>
+                            </dd>
+                        </div>
+                        <div class="pt-6 sm:flex">
+                            <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Fecha de Fin</dt>
+                            <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                                <div class="text-gray-900">{new Date(practica.fecha_fin).toLocaleDateString('es-ES')}</div>
+                            </dd>
+                        </div>
+                        <div class="pt-6 sm:flex">
+                            <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Horas Completadas</dt>
+                            <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                                <div class="text-gray-900">{practica.horas_completadas} horas</div>
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+
+            <!-- Información del Estudiante y Empresa -->
+            <div class="space-y-6">
+                <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+                    <div class="px-4 py-5 sm:p-6">
+                        <h3 class="text-base font-semibold leading-7 text-gray-900">Información del Estudiante</h3>
+                        <dl class="mt-6 space-y-6 divide-y divide-gray-100 text-sm leading-6">
+                            <div class="pt-6 sm:flex">
+                                <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Nombre</dt>
+                                <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                                    <div class="text-gray-900">{estudiante.nombre} {estudiante.apellidos}</div>
+                                </dd>
+                            </div>
+                            <div class="pt-6 sm:flex">
+                                <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Email</dt>
+                                <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                                    <div class="text-gray-900">{estudiante.email}</div>
+                                </dd>
+                            </div>
+                            <div class="pt-6 sm:flex">
+                                <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Carrera</dt>
+                                <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                                    <div class="text-gray-900">{estudiante.carrera}</div>
+                                </dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+
+                <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+                    <div class="px-4 py-5 sm:p-6">
+                        <h3 class="text-base font-semibold leading-7 text-gray-900">Información de la Empresa</h3>
+                        <dl class="mt-6 space-y-6 divide-y divide-gray-100 text-sm leading-6">
+                            <div class="pt-6 sm:flex">
+                                <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Nombre</dt>
+                                <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                                    <div class="text-gray-900">{empresa.nombre}</div>
+                                </dd>
+                            </div>
+                            <div class="pt-6 sm:flex">
+                                <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">RUC</dt>
+                                <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                                    <div class="text-gray-900">{empresa.ruc}</div>
+                                </dd>
+                            </div>
+                            <div class="pt-6 sm:flex">
+                                <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Contacto</dt>
+                                <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                                    <div class="text-gray-900">{empresa.contacto.nombre}</div>
+                                </dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seguimiento y Actividades -->
+        <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+            <div class="px-4 py-5 sm:p-6">
+                <div class="sm:flex sm:items-center">
+                    <div class="sm:flex-auto">
+                        <h3 class="text-base font-semibold leading-7 text-gray-900">Seguimiento y Actividades</h3>
+                        <p class="mt-1 text-sm text-gray-500">Registro de actividades y seguimiento de la práctica</p>
+                    </div>
+                    <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+                        <button type="button" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                            Registrar Actividad
+                        </button>
+                    </div>
+                </div>
+                <div class="mt-6 flow-root">
+                    <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                            <table class="min-w-full divide-y divide-gray-300">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Fecha</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Tipo</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Descripción</th>
+                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Estado</th>
+                                        <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
+                                            <span class="sr-only">Acciones</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-900 sm:pl-0">
+                                            {new Date().toLocaleDateString('es-ES')}
+                                        </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">Informe Mensual</td>
+                                        <td class="px-3 py-4 text-sm text-gray-500">Revisión del informe mensual de actividades</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                Pendiente
+                                            </span>
+                                        </td>
+                                        <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                                            <a href="#" class="text-indigo-600 hover:text-indigo-900">Ver detalles</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</AdminLayout> 
