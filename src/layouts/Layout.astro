@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Footer from '../components/common/Footer.astro';
 
 interface Props {
 	title: string;
@@ -19,10 +20,11 @@ const { title, description = "Sistema de Prácticas Pre Profesionales" } = Astro
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
-	<body class="min-h-screen bg-gray-50">
-		<main>
+	<body class="min-h-screen bg-gray-50 flex flex-col">
+		<main class="flex-grow">
 			<slot />
 		</main>
+		<Footer />
 	</body>
 </html>
 
